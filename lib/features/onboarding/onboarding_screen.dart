@@ -279,8 +279,9 @@ class _GradesIllustration extends StatelessWidget {
                 children: [
                   Text(
                     '14,75',
-                    style: GoogleFonts.dmSerifDisplay(
+                    style: GoogleFonts.nunito(
                       fontSize: 48,
+                      fontWeight: FontWeight.w800,
                       color: ScolarColors.primary,
                       height: 1.0,
                     ),
