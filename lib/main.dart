@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'features/showcase/showcase_screen.dart';
+import 'features/onboarding/onboarding_screen.dart';
 import 'theme/scolar_theme.dart';
 
 void main() => runApp(const ScolarApp());
@@ -14,7 +14,7 @@ class ScolarApp extends StatelessWidget {
       title: 'Scolar',
       debugShowCheckedModeBanner: false,
       theme: ScolarTheme.light,
-      home: const ShowcaseScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }
