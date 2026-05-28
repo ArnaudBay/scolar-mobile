@@ -168,7 +168,9 @@ class _SlidePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: ScolarSpacing.screenPadding),
+      padding: const EdgeInsets.symmetric(
+        horizontal: ScolarSpacing.screenPadding,
+      ),
       child: Column(
         children: [
           // Illustration (format paysage, ~55 % de la hauteur)
@@ -176,7 +178,10 @@ class _SlidePage extends StatelessWidget {
             flex: 11,
             child: Padding(
               padding: const EdgeInsets.only(bottom: ScolarSpacing.lg),
-              child: SizedBox(width: double.infinity, child: slide.illustration),
+              child: SizedBox(
+                width: double.infinity,
+                child: slide.illustration,
+              ),
             ),
           ),
           // Texte centré
@@ -257,10 +262,13 @@ class _GradesIllustration extends StatelessWidget {
       child: Stack(
         children: [
           // Rangées d'amphithéâtre + silhouettes d'étudiants
-          const Positioned.fill(child: CustomPaint(painter: _AmphibeatrePainter())),
+          const Positioned.fill(
+            child: CustomPaint(painter: _AmphibeatrePainter()),
+          ),
           // Blob décoratif haut-droit
           Positioned(
-            top: -30, right: -20,
+            top: -30,
+            right: -20,
             child: _Blob(140, ScolarColors.primary.withValues(alpha: 0.08)),
           ),
           // Bulletin de notes central
@@ -290,11 +298,23 @@ class _GradesIllustration extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      _GradeChip(label: 'Maths', grade: '16', color: ScolarColors.success),
+                      _GradeChip(
+                        label: 'Maths',
+                        grade: '16',
+                        color: ScolarColors.success,
+                      ),
                       SizedBox(width: 6),
-                      _GradeChip(label: 'Info', grade: '18', color: ScolarColors.primary),
+                      _GradeChip(
+                        label: 'Info',
+                        grade: '18',
+                        color: ScolarColors.primary,
+                      ),
                       SizedBox(width: 6),
-                      _GradeChip(label: 'Physique', grade: '14', color: ScolarColors.accent),
+                      _GradeChip(
+                        label: 'Physique',
+                        grade: '14',
+                        color: ScolarColors.accent,
+                      ),
                     ],
                   ),
                 ],
@@ -329,7 +349,13 @@ class _AmphibeatrePainter extends CustomPainter {
 
       // Marche de gradin
       canvas.drawRRect(
-        RRect.fromLTRBR(left, top, left + rowW, top + 14, const Radius.circular(7)),
+        RRect.fromLTRBR(
+          left,
+          top,
+          left + rowW,
+          top + 14,
+          const Radius.circular(7),
+        ),
         rowPaint,
       );
 
@@ -337,7 +363,11 @@ class _AmphibeatrePainter extends CustomPainter {
       final count = 3 + i * 2;
       final spacing = rowW / (count + 1);
       for (int j = 0; j < count; j++) {
-        canvas.drawCircle(Offset(left + spacing * (j + 1), top - 10), 7, dotPaint);
+        canvas.drawCircle(
+          Offset(left + spacing * (j + 1), top - 10),
+          7,
+          dotPaint,
+        );
       }
     }
   }
@@ -347,7 +377,11 @@ class _AmphibeatrePainter extends CustomPainter {
 }
 
 class _GradeChip extends StatelessWidget {
-  const _GradeChip({required this.label, required this.grade, required this.color});
+  const _GradeChip({
+    required this.label,
+    required this.grade,
+    required this.color,
+  });
   final String label;
   final String grade;
   final Color color;
@@ -396,7 +430,8 @@ class _ScheduleIllustration extends StatelessWidget {
           // Bâtiment universitaire + arbres
           const Positioned.fill(child: CustomPaint(painter: _CampusPainter())),
           Positioned(
-            top: -20, left: -20,
+            top: -20,
+            left: -20,
             child: _Blob(100, ScolarColors.accent.withValues(alpha: 0.08)),
           ),
           // Carte planning semaine
@@ -418,11 +453,20 @@ class _ScheduleIllustration extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     children: const [
-                      _CourseBlock(label: 'Maths\n8h–10h', color: ScolarColors.primary),
+                      _CourseBlock(
+                        label: 'Maths\n8h–10h',
+                        color: ScolarColors.primary,
+                      ),
                       SizedBox(width: 6),
-                      _CourseBlock(label: 'Anglais\n10h–12h', color: ScolarColors.accent),
+                      _CourseBlock(
+                        label: 'Anglais\n10h–12h',
+                        color: ScolarColors.accent,
+                      ),
                       SizedBox(width: 6),
-                      _CourseBlock(label: 'Info\n14h–16h', color: ScolarColors.success),
+                      _CourseBlock(
+                        label: 'Info\n14h–16h',
+                        color: ScolarColors.success,
+                      ),
                     ],
                   ),
                 ],
@@ -449,12 +493,24 @@ class _CampusPainter extends CustomPainter {
 
     // Corps du bâtiment principal
     canvas.drawRRect(
-      RRect.fromLTRBR(w * 0.14, h * 0.10, w * 0.86, h * 0.46, const Radius.circular(6)),
+      RRect.fromLTRBR(
+        w * 0.14,
+        h * 0.10,
+        w * 0.86,
+        h * 0.46,
+        const Radius.circular(6),
+      ),
       buildingPaint,
     );
     // Tour centrale
     canvas.drawRRect(
-      RRect.fromLTRBR(w * 0.40, h * 0.02, w * 0.60, h * 0.12, const Radius.circular(6)),
+      RRect.fromLTRBR(
+        w * 0.40,
+        h * 0.02,
+        w * 0.60,
+        h * 0.12,
+        const Radius.circular(6),
+      ),
       buildingPaint,
     );
     // Fenêtres (2 rangées × 4)
@@ -484,7 +540,11 @@ class _CampusPainter extends CustomPainter {
       ..color = const Color(0xFF10B981).withValues(alpha: 0.30);
     canvas.drawCircle(Offset(w * 0.09, h * 0.40), 22, treePaint);
     canvas.drawCircle(Offset(w * 0.91, h * 0.40), 18, treePaint);
-    canvas.drawCircle(Offset(w * 0.09, h * 0.40), 14, treePaint..color = const Color(0xFF10B981).withValues(alpha: 0.45));
+    canvas.drawCircle(
+      Offset(w * 0.09, h * 0.40),
+      14,
+      treePaint..color = const Color(0xFF10B981).withValues(alpha: 0.45),
+    );
   }
 
   @override
@@ -543,7 +603,8 @@ class _HomeworkIllustration extends StatelessWidget {
           // Rayons de bibliothèque + livres
           const Positioned.fill(child: CustomPaint(painter: _LibraryPainter())),
           Positioned(
-            bottom: -25, right: -15,
+            bottom: -25,
+            right: -15,
             child: _Blob(90, ScolarColors.success.withValues(alpha: 0.12)),
           ),
           // Liste de tâches
@@ -602,8 +663,10 @@ class _LibraryPainter extends CustomPainter {
         ..color = const Color(0xFFBCAAA4).withValues(alpha: 0.55);
       canvas.drawRRect(
         RRect.fromLTRBR(
-          w * 0.04, shelfTop + h * 0.098,
-          w * 0.96, shelfTop + h * 0.122,
+          w * 0.04,
+          shelfTop + h * 0.098,
+          w * 0.96,
+          shelfTop + h * 0.122,
           const Radius.circular(3),
         ),
         shelfPaint,
@@ -618,8 +681,10 @@ class _LibraryPainter extends CustomPainter {
           ..color = _bookColors[b % _bookColors.length].withValues(alpha: 0.38);
         canvas.drawRRect(
           RRect.fromLTRBR(
-            bookX, shelfTop + h * 0.098 - bookH,
-            bookX + bookW - 3, shelfTop + h * 0.098,
+            bookX,
+            shelfTop + h * 0.098 - bookH,
+            bookX + bookW - 3,
+            shelfTop + h * 0.098,
             const Radius.circular(3),
           ),
           bookPaint,
