@@ -47,17 +47,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Claude Code / AI tooling
-.claude/
-CLAUDE.md
-.cursor/
-.aider*
-.windsurf/
-
-# OS
-Thumbs.db
-desktop.ini
-
-# Editors
-.vscode/
-*.code-workspace
+# Agent instructions (never push)
+AGENTS.md
