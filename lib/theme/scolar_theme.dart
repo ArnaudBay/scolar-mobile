@@ -53,21 +53,19 @@ class ScolarColors {
   static const Color danger = Color(0xFFEF4444);
 
   /// MaterialColor swatch pour ThemeData.primarySwatch.
-  static const MaterialColor primarySwatch = MaterialColor(
-    0xFF0D02FE,
-    <int, Color>{
-      50:  Color(0xFFEEF1FF),
-      100: Color(0xFFD6DEFF),
-      200: Color(0xFFB0B8FF),
-      300: Color(0xFF8090FF),
-      400: Color(0xFF4D5BFF),
-      500: Color(0xFF0D02FE),
-      600: Color(0xFF0B02E5),
-      700: Color(0xFF0A02CC),
-      800: Color(0xFF0801B3),
-      900: Color(0xFF050099),
-    },
-  );
+  static const MaterialColor primarySwatch =
+      MaterialColor(0xFF0D02FE, <int, Color>{
+        50: Color(0xFFEEF1FF),
+        100: Color(0xFFD6DEFF),
+        200: Color(0xFFB0B8FF),
+        300: Color(0xFF8090FF),
+        400: Color(0xFF4D5BFF),
+        500: Color(0xFF0D02FE),
+        600: Color(0xFF0B02E5),
+        700: Color(0xFF0A02CC),
+        800: Color(0xFF0801B3),
+        900: Color(0xFF050099),
+      });
 }
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -82,13 +80,12 @@ class ScolarTypography {
     double? height,
     double? letterSpacing,
     Color color = ScolarColors.text,
-  }) =>
-      GoogleFonts.dmSerifDisplay(
-        fontSize: fontSize,
-        height: height,
-        letterSpacing: letterSpacing,
-        color: color,
-      );
+  }) => GoogleFonts.dmSerifDisplay(
+    fontSize: fontSize,
+    height: height,
+    letterSpacing: letterSpacing,
+    color: color,
+  );
 
   static TextStyle _sans({
     required double fontSize,
@@ -96,14 +93,13 @@ class ScolarTypography {
     FontWeight fontWeight = FontWeight.w400,
     double? letterSpacing,
     Color color = ScolarColors.text,
-  }) =>
-      GoogleFonts.dmSans(
-        fontSize: fontSize,
-        height: height,
-        fontWeight: fontWeight,
-        letterSpacing: letterSpacing,
-        color: color,
-      );
+  }) => GoogleFonts.dmSans(
+    fontSize: fontSize,
+    height: height,
+    fontWeight: fontWeight,
+    letterSpacing: letterSpacing,
+    color: color,
+  );
 
   // ─── Headings (DM Serif Display) ──────────────────────────────────────
 
@@ -138,28 +134,28 @@ class ScolarTypography {
 
   /// Label de champ — UPPERCASE, gras, espacé.
   static TextStyle get label => _sans(
-        fontSize: 11,
-        height: 1.20,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.8,
-        color: ScolarColors.primary,
-      );
+    fontSize: 11,
+    height: 1.20,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.8,
+    color: ScolarColors.primary,
+  );
 
   /// Texte de bouton.
   static TextStyle get button => _sans(
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.2,
-        color: ScolarColors.white,
-      );
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.2,
+    color: ScolarColors.white,
+  );
 
   /// Caption — micro-texte, méta-informations.
   static TextStyle get caption => _sans(
-        fontSize: 12,
-        height: 1.40,
-        fontWeight: FontWeight.w500,
-        color: ScolarColors.muted,
-      );
+    fontSize: 12,
+    height: 1.40,
+    fontWeight: FontWeight.w500,
+    color: ScolarColors.muted,
+  );
 }
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -168,13 +164,14 @@ class ScolarTypography {
 
 class ScolarSpacing {
   ScolarSpacing._();
+
   /// Échelle 4 px — utiliser uniquement ces valeurs.
-  static const double xs   = 4;
-  static const double sm   = 8;
-  static const double md   = 16;
-  static const double lg   = 24;
-  static const double xl   = 32;
-  static const double xxl  = 48;
+  static const double xs = 4;
+  static const double sm = 8;
+  static const double md = 16;
+  static const double lg = 24;
+  static const double xl = 32;
+  static const double xxl = 48;
   static const double xxxl = 64;
 
   /// Marge latérale standard d'un écran mobile.
@@ -183,10 +180,10 @@ class ScolarSpacing {
 
 class ScolarRadius {
   ScolarRadius._();
-  static const double sm   = 12;
-  static const double md   = 16;
-  static const double lg   = 20;
-  static const double xl   = 28;
+  static const double sm = 12;
+  static const double md = 16;
+  static const double lg = 20;
+  static const double xl = 28;
   static const double pill = 999;
 
   static const BorderRadius all12 = BorderRadius.all(Radius.circular(sm));
@@ -235,148 +232,138 @@ class ScolarTheme {
   ScolarTheme._();
 
   static ThemeData get light => ThemeData(
-        useMaterial3: true,
-        primaryColor: ScolarColors.primary,
-        scaffoldBackgroundColor: ScolarColors.white,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: ScolarColors.primary,
-          primary: ScolarColors.primary,
-          onPrimary: ScolarColors.white,
-          secondary: ScolarColors.accent,
-          onSecondary: ScolarColors.white,
-          surface: ScolarColors.white,
-          onSurface: ScolarColors.text,
-          error: ScolarColors.danger,
-        ),
-        textTheme: TextTheme(
-          displayLarge: ScolarTypography.display,
-          headlineLarge: ScolarTypography.h1,
-          headlineMedium: ScolarTypography.h2,
-          headlineSmall: ScolarTypography.h3,
-          bodyLarge: ScolarTypography.body,
-          bodyMedium: ScolarTypography.bodySmall,
-          labelLarge: ScolarTypography.button,
-          labelMedium: ScolarTypography.label,
-          labelSmall: ScolarTypography.caption,
-        ),
+    useMaterial3: true,
+    primaryColor: ScolarColors.primary,
+    scaffoldBackgroundColor: ScolarColors.white,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: ScolarColors.primary,
+      primary: ScolarColors.primary,
+      onPrimary: ScolarColors.white,
+      secondary: ScolarColors.accent,
+      onSecondary: ScolarColors.white,
+      surface: ScolarColors.white,
+      onSurface: ScolarColors.text,
+      error: ScolarColors.danger,
+    ),
+    textTheme: TextTheme(
+      displayLarge: ScolarTypography.display,
+      headlineLarge: ScolarTypography.h1,
+      headlineMedium: ScolarTypography.h2,
+      headlineSmall: ScolarTypography.h3,
+      bodyLarge: ScolarTypography.body,
+      bodyMedium: ScolarTypography.bodySmall,
+      labelLarge: ScolarTypography.button,
+      labelMedium: ScolarTypography.label,
+      labelSmall: ScolarTypography.caption,
+    ),
 
-        // ── Bouton primaire ────────────────────────────────────────────
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ScolarColors.primary,
-            foregroundColor: ScolarColors.white,
-            minimumSize: const Size.fromHeight(56),
-            shape: const RoundedRectangleBorder(
-              borderRadius: ScolarRadius.all20,
-            ),
-            textStyle: ScolarTypography.button,
-            elevation: 0,
-            shadowColor: ScolarColors.primary.withValues(alpha: 0.18),
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-          ),
-        ),
+    // ── Bouton primaire ────────────────────────────────────────────
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: ScolarColors.primary,
+        foregroundColor: ScolarColors.white,
+        minimumSize: const Size.fromHeight(56),
+        shape: const RoundedRectangleBorder(borderRadius: ScolarRadius.all20),
+        textStyle: ScolarTypography.button,
+        elevation: 0,
+        shadowColor: ScolarColors.primary.withValues(alpha: 0.18),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+      ),
+    ),
 
-        // ── Bouton secondaire ──────────────────────────────────────────
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            foregroundColor: ScolarColors.text,
-            minimumSize: const Size.fromHeight(54),
-            side: const BorderSide(color: ScolarColors.border, width: 1.5),
-            shape: const RoundedRectangleBorder(
-              borderRadius: ScolarRadius.all20,
-            ),
-            textStyle:
-                ScolarTypography.button.copyWith(color: ScolarColors.text),
-          ),
-        ),
+    // ── Bouton secondaire ──────────────────────────────────────────
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: ScolarColors.text,
+        minimumSize: const Size.fromHeight(54),
+        side: const BorderSide(color: ScolarColors.border, width: 1.5),
+        shape: const RoundedRectangleBorder(borderRadius: ScolarRadius.all20),
+        textStyle: ScolarTypography.button.copyWith(color: ScolarColors.text),
+      ),
+    ),
 
-        // ── Bouton texte ───────────────────────────────────────────────
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: ScolarColors.primary,
-            textStyle: GoogleFonts.dmSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+    // ── Bouton texte ───────────────────────────────────────────────
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: ScolarColors.primary,
+        textStyle: GoogleFonts.dmSans(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
         ),
+      ),
+    ),
 
-        // ── Champs de saisie (underline minimaliste) ───────────────────
-        inputDecorationTheme: InputDecorationTheme(
-          filled: false,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
-          labelStyle: ScolarTypography.label,
-          floatingLabelStyle: ScolarTypography.label,
-          hintStyle: GoogleFonts.dmSans(
-            fontSize: 16,
-            color: ScolarColors.muted,
-          ),
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: ScolarColors.border, width: 1.5),
-          ),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: ScolarColors.primary, width: 1.5),
-          ),
-          errorBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: ScolarColors.danger, width: 1.5),
-          ),
-        ),
+    // ── Champs de saisie (underline minimaliste) ───────────────────
+    inputDecorationTheme: InputDecorationTheme(
+      filled: false,
+      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+      labelStyle: ScolarTypography.label,
+      floatingLabelStyle: ScolarTypography.label,
+      hintStyle: GoogleFonts.dmSans(fontSize: 16, color: ScolarColors.muted),
+      enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: ScolarColors.border, width: 1.5),
+      ),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: ScolarColors.primary, width: 1.5),
+      ),
+      errorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: ScolarColors.danger, width: 1.5),
+      ),
+    ),
 
-        // ── App bar ────────────────────────────────────────────────────
-        appBarTheme: AppBarTheme(
-          backgroundColor: ScolarColors.white,
-          foregroundColor: ScolarColors.text,
-          elevation: 0,
-          centerTitle: false,
-          titleTextStyle: ScolarTypography.h3,
-          iconTheme: const IconThemeData(color: ScolarColors.text, size: 22),
-        ),
+    // ── App bar ────────────────────────────────────────────────────
+    appBarTheme: AppBarTheme(
+      backgroundColor: ScolarColors.white,
+      foregroundColor: ScolarColors.text,
+      elevation: 0,
+      centerTitle: false,
+      titleTextStyle: ScolarTypography.h3,
+      iconTheme: const IconThemeData(color: ScolarColors.text, size: 22),
+    ),
 
-        // ── Cards ──────────────────────────────────────────────────────
-        cardTheme: const CardThemeData(
-          color: ScolarColors.white,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(borderRadius: ScolarRadius.all20),
-        ),
+    // ── Cards ──────────────────────────────────────────────────────
+    cardTheme: const CardThemeData(
+      color: ScolarColors.white,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: ScolarRadius.all20),
+    ),
 
-        // ── Bottom navigation ──────────────────────────────────────────
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: ScolarColors.white,
-          selectedItemColor: ScolarColors.primary,
-          unselectedItemColor: ScolarColors.muted,
-          type: BottomNavigationBarType.fixed,
-          elevation: 0,
-          showUnselectedLabels: true,
-          selectedLabelStyle: GoogleFonts.dmSans(
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
-          unselectedLabelStyle: GoogleFonts.dmSans(
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+    // ── Bottom navigation ──────────────────────────────────────────
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: ScolarColors.white,
+      selectedItemColor: ScolarColors.primary,
+      unselectedItemColor: ScolarColors.muted,
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+      showUnselectedLabels: true,
+      selectedLabelStyle: GoogleFonts.dmSans(
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+      ),
+      unselectedLabelStyle: GoogleFonts.dmSans(
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
 
-        // ── Chips (sélecteur de classe) ────────────────────────────────
-        chipTheme: ChipThemeData(
-          backgroundColor: ScolarColors.white,
-          selectedColor: ScolarColors.primary,
-          labelStyle: GoogleFonts.dmSans(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: ScolarColors.text,
-          ),
-          secondaryLabelStyle: GoogleFonts.dmSans(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: ScolarColors.white,
-          ),
-          side: const BorderSide(color: ScolarColors.border),
-          shape: const RoundedRectangleBorder(
-            borderRadius: ScolarRadius.allPill,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        ),
-      );
+    // ── Chips (sélecteur de classe) ────────────────────────────────
+    chipTheme: ChipThemeData(
+      backgroundColor: ScolarColors.white,
+      selectedColor: ScolarColors.primary,
+      labelStyle: GoogleFonts.dmSans(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        color: ScolarColors.text,
+      ),
+      secondaryLabelStyle: GoogleFonts.dmSans(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        color: ScolarColors.white,
+      ),
+      side: const BorderSide(color: ScolarColors.border),
+      shape: const RoundedRectangleBorder(borderRadius: ScolarRadius.allPill),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+    ),
+  );
 }
