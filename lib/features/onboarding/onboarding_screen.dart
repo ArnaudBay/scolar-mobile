@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../auth/login_screen.dart';
 import '../../shared/widgets/scolar_logo.dart';
 import '../../theme/scolar_theme.dart';
 
@@ -69,9 +68,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _startApp() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-    );
+    // TODO: naviguer vers l'écran d'authentification
   }
 
   @override
