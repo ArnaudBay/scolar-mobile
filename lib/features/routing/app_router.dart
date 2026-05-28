@@ -14,7 +14,10 @@ class AppRouter {
     switch (settings.name) {
       // Route onboarding 
       case onboarding:
-        return _buildRoute(settings: settings, child: const OnboardingScreen());
+        return _buildRoute(
+          settings: settings,
+          child: const OnboardingScreen(),
+        );
       // Route home invité 
       case home:
         return _buildRoute(
@@ -23,7 +26,10 @@ class AppRouter {
         );
       // Route login 
       case login:
-        return _buildRoute(settings: settings, child: const _LoginEntryPage());
+        return _buildRoute(
+          settings: settings,
+          child: const _LoginEntryPage(),
+        );
       // Route introuvable 
       default:
         return _buildRoute(
@@ -38,7 +44,10 @@ class AppRouter {
   static Future<void> goToGuestHome(BuildContext context) {
     return Navigator.of(
       context,
-    ).pushNamedAndRemoveUntil(home, (route) => false);
+    ).pushNamedAndRemoveUntil(
+      home,
+      (route) => false,
+    );
   }
 
   // Navigation login 
@@ -46,7 +55,10 @@ class AppRouter {
   static Future<void> goToLogin(BuildContext context) {
     return Navigator.of(
       context,
-    ).pushNamedAndRemoveUntil(login, (route) => false);
+      ).pushNamedAndRemoveUntil(
+      login,
+      (route) => false,
+    );
   }
 
   // Gestion des routes
@@ -71,7 +83,11 @@ class _GuestHomeEntryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Accueil (invité)')));
+    return const Scaffold(
+      body: Center(
+        child: Text('Accueil (invité)'),
+      ),
+    );
   }
 }
 
@@ -81,7 +97,11 @@ class _LoginEntryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Connexion')));
+    return const Scaffold(
+      body: Center(
+        child: Text('Connexion'),
+      ),
+    );
   }
 }
 
@@ -91,6 +111,10 @@ class _UnknownRoutePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Route introuvable')));
+    return const Scaffold(
+      body: Center(
+        child: Text('Route introuvable'),
+      ),
+    );
   }
 }
