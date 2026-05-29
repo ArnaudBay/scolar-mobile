@@ -14,7 +14,7 @@ class ScolarApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ScolarTheme.light,
       onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: AppRouter.register,
+      initialRoute: AppRouter.onboarding,
     );
   }
 }
