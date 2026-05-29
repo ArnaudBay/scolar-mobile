@@ -299,4 +299,3 @@ class _SegmentedItem extends StatelessWidget {
     );
   }
 }
-

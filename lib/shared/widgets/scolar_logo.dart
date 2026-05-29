@@ -23,9 +23,7 @@ class ScolarLogoMark extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(
-        painter: _LogoPainter(color ?? ScolarColors.primary),
-      ),
+      child: CustomPaint(painter: _LogoPainter(color ?? ScolarColors.primary)),
     );
   }
 }

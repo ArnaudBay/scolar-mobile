@@ -550,10 +550,7 @@ class _SubjectChip extends StatelessWidget {
   String get _initials {
     final parts = subject.name.split(RegExp(r'[ -]'));
     if (parts.isEmpty || parts.first.isEmpty) return '?';
-    final first = parts.first.substring(
-      0,
-      parts.first.length >= 2 ? 2 : 1,
-    );
+    final first = parts.first.substring(0, parts.first.length >= 2 ? 2 : 1);
     return first[0].toUpperCase() + (first.length > 1 ? first[1] : '');
   }
 
@@ -602,10 +599,7 @@ class _SubjectChip extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: deltaColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(999),
