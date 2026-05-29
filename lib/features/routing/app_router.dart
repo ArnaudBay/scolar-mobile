@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../onboarding/onboarding_screen.dart';
+import '../auth/registration_screen.dart';
 
 /// Routes nommées centralisées de l'app.
 class AppRouter {
@@ -8,29 +9,27 @@ class AppRouter {
   static const String onboarding = '/';
   static const String home = '/home';
   static const String login = '/login';
+  static const String register = "/register";
 
-  // Gestion des routes 
+  // Gestion des routes
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // Route onboarding 
+      // Route onboarding
       case onboarding:
-        return _buildRoute(
-          settings: settings,
-          child: const OnboardingScreen(),
-        );
-      // Route home invité 
+        return _buildRoute(settings: settings, child: const OnboardingScreen());
+      // Route home invité
       case home:
         return _buildRoute(
           settings: settings,
           child: const _GuestHomeEntryPage(),
         );
-      // Route login 
+      // Route login
       case login:
-        return _buildRoute(
-          settings: settings,
-          child: const _LoginEntryPage(),
-        );
-      // Route introuvable 
+        return _buildRoute(settings: settings, child: const _LoginEntryPage());
+      //Route Register
+      case register:
+        return _buildRoute(settings: settings, child: RegistrationScreen());
+      // Route introuvable
       default:
         return _buildRoute(
           settings: settings,
@@ -39,26 +38,27 @@ class AppRouter {
     }
   }
 
-  // Navigation home invité 
+  // Navigation home invité
 
   static Future<void> goToGuestHome(BuildContext context) {
     return Navigator.of(
       context,
-    ).pushNamedAndRemoveUntil(
-      home,
-      (route) => false,
-    );
+    ).pushNamedAndRemoveUntil(home, (route) => false);
   }
 
-  // Navigation login 
+  // Navigation login
 
   static Future<void> goToLogin(BuildContext context) {
     return Navigator.of(
       context,
-      ).pushNamedAndRemoveUntil(
-      login,
-      (route) => false,
-    );
+    ).pushNamedAndRemoveUntil(login, (route) => false);
+  }
+
+  //Navigation register
+  static Future<void> goToRegister(BuildContext context) {
+    return Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(register, (route) => false);
   }
 
   // Gestion des routes
@@ -74,20 +74,16 @@ class AppRouter {
   }
 }
 
-// Écrans temporaires (Onboarding) 
+// Écrans temporaires (Onboarding)
 // Seront remplacés par les vrais widgets (OnboardingScreen, StudentHomeScreen…).
 
-// Écrans temporaires (Accueil invité) 
+// Écrans temporaires (Accueil invité)
 class _GuestHomeEntryPage extends StatelessWidget {
   const _GuestHomeEntryPage();
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Accueil (invité)'),
-      ),
-    );
+    return const Scaffold(body: Center(child: Text('Accueil (invité)')));
   }
 }
 
@@ -97,11 +93,7 @@ class _LoginEntryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Connexion'),
-      ),
-    );
+    return const Scaffold(body: Center(child: Text('Connexion')));
   }
 }
 
@@ -111,10 +103,6 @@ class _UnknownRoutePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Route introuvable'),
-      ),
-    );
+    return const Scaffold(body: Center(child: Text('Route introuvable')));
   }
 }
