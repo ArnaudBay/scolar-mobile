@@ -320,9 +320,7 @@ class _StepIndicator extends StatelessWidget {
           width: 24,
           height: 6,
           decoration: BoxDecoration(
-            color: filled
-                ? ScolarColors.ink
-                : ScolarColors.creamDark,
+            color: filled ? ScolarColors.ink : ScolarColors.creamDark,
             borderRadius: BorderRadius.circular(999),
           ),
         );
