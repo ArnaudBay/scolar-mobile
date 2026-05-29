@@ -7,28 +7,36 @@ import '../../theme/scolar_theme.dart';
 ///  ┌──────────┬──────────┐
 ///  │  ●       │   ◎     │  cercle plein  |  anneau (donut)
 ///  ├──────────┼──────────┤
-///  │  ∩       │   ∪     │  arche         |  écusson arrondi
+///  │  ∩       │   ∪       │  arche         |  écusson arrondi
 ///  └──────────┴──────────┘
 class ScolarLogoMark extends StatelessWidget {
-  const ScolarLogoMark({super.key, this.size = 64});
+  const ScolarLogoMark({super.key, this.size = 64, this.color});
 
   final double size;
+
+  /// Couleur de remplissage. `null` → `ScolarColors.primary` (bleu vif).
+  /// Passer `ScolarColors.primaryLight` pour un rendu plus doux.
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(painter: _LogoPainter()),
+      child: CustomPaint(painter: _LogoPainter(color ?? ScolarColors.primary)),
     );
   }
 }
 
 class _LogoPainter extends CustomPainter {
+  _LogoPainter(this.color);
+
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint()
-      ..color = ScolarColors.primary
+      ..color = color
       ..style = PaintingStyle.fill;
 
     final w = size.width;
@@ -37,17 +45,13 @@ class _LogoPainter extends CustomPainter {
     final gap = w * 0.10;
     final cell = (w - gap) / 2;
 
-    final tlX = 0.0;          // origine X cellule haut-gauche
-    final trX = cell + gap;   // origine X cellule haut-droite
-    final topY = 0.0;         // origine Y rangée haute
-    final botY = cell + gap;  // origine Y rangée basse
+    final tlX = 0.0; // origine X cellule haut-gauche
+    final trX = cell + gap; // origine X cellule haut-droite
+    final topY = 0.0; // origine Y rangée haute
+    final botY = cell + gap; // origine Y rangée basse
 
     // ── 1 · Cercle plein (haut-gauche) ────────────────────────────────
-    canvas.drawCircle(
-      Offset(tlX + cell / 2, topY + cell / 2),
-      cell / 2,
-      fill,
-    );
+    canvas.drawCircle(Offset(tlX + cell / 2, topY + cell / 2), cell / 2, fill);
 
     // ── 2 · Anneau / donut (haut-droite) ──────────────────────────────
     final rCenter = Offset(trX + cell / 2, topY + cell / 2);
@@ -80,8 +84,8 @@ class _LogoPainter extends CustomPainter {
           width: aW,
           height: aW,
         ),
-        math.pi,   // départ côté gauche (180°)
-        math.pi,   // sweep horaire → passe par le haut (270°)
+        math.pi, // départ côté gauche (180°)
+        math.pi, // sweep horaire → passe par le haut (270°)
         false,
       )
       ..lineTo(aR, aB)
@@ -110,8 +114,8 @@ class _LogoPainter extends CustomPainter {
           width: sW,
           height: sW,
         ),
-        0,         // départ côté droit (0°)
-        math.pi,   // sweep horaire → passe par le bas (90°)
+        0, // départ côté droit (0°)
+        math.pi, // sweep horaire → passe par le bas (90°)
         false,
       )
       ..close(); // remonte automatiquement vers (sL, sT) via le côté gauche
@@ -119,5 +123,6 @@ class _LogoPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _LogoPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
