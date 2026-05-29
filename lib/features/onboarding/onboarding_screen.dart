@@ -311,9 +311,7 @@ class _OnboardingIllustrationState extends State<_OnboardingIllustration> {
         if (bytes == null || bytes.isEmpty) {
           return const _IllustrationPlaceholder();
         }
-        return Center(
-          child: SvgPicture.memory(bytes, fit: BoxFit.contain),
-        );
+        return Center(child: SvgPicture.memory(bytes, fit: BoxFit.contain));
       },
     );
   }

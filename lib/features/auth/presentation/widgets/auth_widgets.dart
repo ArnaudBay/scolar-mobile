@@ -87,10 +87,7 @@ class FlatField extends StatelessWidget {
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: GoogleFonts.dmSans(
-          fontSize: 15,
-          color: ScolarColors.muted,
-        ),
+        hintStyle: GoogleFonts.dmSans(fontSize: 15, color: ScolarColors.muted),
         filled: true,
         fillColor: ScolarColors.white,
         contentPadding: const EdgeInsets.symmetric(
@@ -192,11 +189,7 @@ class AuthErrorBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.error_outline,
-            color: ScolarColors.danger,
-            size: 18,
-          ),
+          const Icon(Icons.error_outline, color: ScolarColors.danger, size: 18),
           const SizedBox(width: ScolarSpacing.sm),
           Expanded(
             child: Text(
