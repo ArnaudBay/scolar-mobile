@@ -90,8 +90,9 @@ class ScolarColors {
 class ScolarTypography {
   ScolarTypography._();
 
-  static TextStyle _serif({
+  static TextStyle _heading({
     required double fontSize,
+    required FontWeight fontWeight,
     double? height,
     double? letterSpacing,
     Color color = ScolarColors.text,
@@ -116,27 +117,47 @@ class ScolarTypography {
     color: color,
   );
 
-  // ─── Headings (DM Serif Display) ──────────────────────────────────────
+  // ─── Headings (Nunito) ────────────────────────────────────────────────
 
-  /// Display — Splash, hero wordmark.
-  static TextStyle get display =>
-      _serif(fontSize: 56, height: 1.07, letterSpacing: -1.2);
+  /// Display — hero wordmark.
+  static TextStyle get display => _heading(
+        fontSize: 52,
+        fontWeight: FontWeight.w800,
+        height: 1.05,
+        letterSpacing: -0.5,
+      );
 
   /// H1 — titres principaux d'écran.
-  static TextStyle get h1 =>
-      _serif(fontSize: 36, height: 1.10, letterSpacing: -0.5);
+  static TextStyle get h1 => _heading(
+        fontSize: 34,
+        fontWeight: FontWeight.w700,
+        height: 1.12,
+        letterSpacing: -0.3,
+      );
 
   /// H2 — titres de section.
-  static TextStyle get h2 =>
-      _serif(fontSize: 24, height: 1.16, letterSpacing: -0.3);
+  static TextStyle get h2 => _heading(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        height: 1.18,
+        letterSpacing: -0.2,
+      );
 
   /// H3 — sous-titres, cartes.
-  static TextStyle get h3 =>
-      _serif(fontSize: 20, height: 1.20, letterSpacing: -0.2);
+  static TextStyle get h3 => _heading(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        height: 1.22,
+        letterSpacing: -0.1,
+      );
 
   /// Chiffres mis en valeur — moyennes, notes.
-  static TextStyle get numeric =>
-      _serif(fontSize: 26, height: 1.0, letterSpacing: -0.5);
+  static TextStyle get numeric => _heading(
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        height: 1.0,
+        letterSpacing: -0.3,
+      );
 
   // ─── Body (DM Sans) ───────────────────────────────────────────────────
 
