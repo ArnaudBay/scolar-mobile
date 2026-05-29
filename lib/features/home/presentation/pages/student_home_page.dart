@@ -1,78 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/router/app_routes.dart';
+import '../../../../core/utils/fr_date.dart';
+import '../../../../shared/widgets/scolar_logo.dart';
+import '../../../../theme/scolar_theme.dart';
+import '../../../auth/domain/auth_state.dart';
+import '../../../auth/presentation/auth_controller.dart';
+import '../../../homeworks/presentation/homeworks_providers.dart';
+import '../../../notes/domain/notes_repository.dart';
+import '../../../notes/presentation/notes_providers.dart';
+import '../../../schedule/domain/schedule_repository.dart';
+import '../../../schedule/presentation/schedule_providers.dart';
 
-class StudentHomePage extends StatelessWidget {
+// Couleurs spécifiques au dashboard absentes du design system global —
+// si elles deviennent réutilisées ailleurs, les remonter dans `ScolarColors`.
+const Color _kCardNavy = Color(0xFF1E2452);
+const Color _kBarIndigo = Color(0xFF6366F1);
+
+class StudentHomePage extends ConsumerWidget {
   const StudentHomePage({super.key});
 
-  static final List<Map<String, dynamic>> _upcomingCourses = [
-    {
-      'time': '10:00',
-      'title': 'Mathématiques',
-      'subtitle': 'Mme Ngouabi · Salle B12',
-      'barColor': AppColors.barBlue,
-      'isOngoing': true,
-    },
-    {
-      'time': '11:00',
-      'title': 'Physique-Chimie',
-      'subtitle': 'M. Mokoko · Salle C04',
-      'barColor': AppColors.barOrange,
-      'isOngoing': false,
-    },
-    {
-      'time': '14:00',
-      'title': 'Philosophie',
-      'subtitle': 'Mme Yandé · Salle A21',
-      'barColor': AppColors.barIndigo,
-      'isOngoing': false,
-    },
-  ];
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authControllerProvider);
+    final firstName = switch (authState) {
+      AuthAuthenticated(student: final s) => s.firstName,
+      _ => 'Élève',
+    };
+    final classLabel = switch (authState) {
+      AuthAuthenticated(student: final s) =>
+        '${s.classLabel ?? "Terminale S"} · ${s.schoolName ?? "Lycée Pierre-Marie de Bangui"}',
+      _ => '',
+    };
 
-  static final List<Map<String, dynamic>> _recentGrades = [
-    {
-      'initials': 'Ma',
-      'subject': 'Mathématiques',
-      'delta': '+1.2',
-      'avatarColor': Color(0xFF8B5CF6),
-    },
-    {
-      'initials': 'Hi',
-      'subject': 'Histoire',
-      'delta': '+0.5',
-      'avatarColor': AppColors.cardOrange,
-    },
-    {
-      'initials': 'Fr',
-      'subject': 'Français',
-      'delta': '-0.3',
-      'avatarColor': AppColors.barBlue,
-    },
-  ];
+    return ColoredBox(
+      color: ScolarColors.background,
+      child: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(overallAverageProvider);
+            ref.invalidate(weekScheduleProvider);
+            ref.invalidate(subjectsProvider);
+            ref.invalidate(pendingHomeworksCountProvider);
+            await ref.read(overallAverageProvider.future);
+          },
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            slivers: [
+              SliverToBoxAdapter(child: _Header(firstName: firstName)),
+              SliverToBoxAdapter(child: _Hero(classLabel: classLabel)),
+              const SliverToBoxAdapter(child: _StatsRow()),
+              const SliverToBoxAdapter(child: _UpcomingCourses()),
+              const SliverToBoxAdapter(child: _RecentSubjects()),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────
+
+class _Header extends StatelessWidget {
+  const _Header({required this.firstName});
+  final String firstName;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(child: _buildHeader()),
-            SliverToBoxAdapter(child: _buildHeroSection()),
-            SliverToBoxAdapter(child: _buildStatsRow()),
-            SliverToBoxAdapter(child: _buildUpcomingCourses()),
-            SliverToBoxAdapter(child: _buildRecentGrades()),
-            const SliverToBoxAdapter(child: SizedBox(height: 90)),
-          ],
-        ),
-      ),
-      bottomNavigationBar: _buildBottomNav(),
-    );
-  }
-
-  Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
@@ -80,25 +81,25 @@ class StudentHomePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              const _ScolarLogoWidget(),
+              const _BrandAvatar(),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Bonjour,',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.dmSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w400,
-                      color: AppColors.textSecondary,
+                      color: ScolarColors.muted,
                     ),
                   ),
                   Text(
-                    'Aminata',
-                    style: GoogleFonts.inter(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                    firstName,
+                    style: GoogleFonts.dmSerifDisplay(
+                      fontSize: 20,
+                      color: ScolarColors.text,
+                      height: 1.0,
                     ),
                   ),
                 ],
@@ -110,8 +111,32 @@ class StudentHomePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildHeroSection() {
+class _BrandAvatar extends StatelessWidget {
+  const _BrandAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44,
+      width: 44,
+      decoration: BoxDecoration(
+        color: ScolarColors.secondary,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      alignment: Alignment.center,
+      child: const ScolarLogoMark(size: 24),
+    );
+  }
+}
+
+class _Hero extends StatelessWidget {
+  const _Hero({required this.classLabel});
+  final String classLabel;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -120,29 +145,54 @@ class StudentHomePage extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             'Ta semaine\nen un coup d\'œil.',
-            style: GoogleFonts.inter(
+            style: GoogleFonts.dmSerifDisplay(
               fontSize: 32,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
+              color: ScolarColors.text,
               height: 1.05,
             ),
           ),
           const SizedBox(height: 12),
-          Text(
-            'Terminale S · Lycée Pierre-Marie de Bangui',
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ),
+          Row(
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: const BoxDecoration(
+                  color: ScolarColors.accent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  classLabel,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: ScolarColors.muted,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 22),
         ],
       ),
     );
   }
+}
 
-  Widget _buildStatsRow() {
+// ─── Stats row ────────────────────────────────────────────────────────────
+
+class _StatsRow extends ConsumerWidget {
+  const _StatsRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final averageAsync = ref.watch(overallAverageProvider);
+    final todayAsync = ref.watch(todayScheduleProvider);
+    final pendingHomeworksAsync = ref.watch(pendingHomeworksCountProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: IntrinsicHeight(
@@ -151,104 +201,42 @@ class StudentHomePage extends StatelessWidget {
           children: [
             Expanded(
               flex: 6,
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.cardNavy,
-                  borderRadius: BorderRadius.circular(16),
+              child: _StatCard(
+                background: _kCardNavy,
+                value: averageAsync.maybeWhen(
+                  data: (v) => v.toStringAsFixed(1),
+                  orElse: () => '—',
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '15.2',
-                      style: GoogleFonts.inter(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textOnDark,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Moyenne\ngénérale',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xE6FFFFFF),
-                        height: 1.3,
-                      ),
-                    ),
-                  ],
-                ),
+                label: 'Moyenne\ngénérale',
+                onTap: () => context.go(AppRoutes.notes),
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
               flex: 5,
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.cardOrange,
-                  borderRadius: BorderRadius.circular(16),
+              child: _StatCard(
+                background: ScolarColors.accent,
+                value: todayAsync.maybeWhen(
+                  data: (slots) => slots.length.toString(),
+                  orElse: () => '—',
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '5',
-                      style: GoogleFonts.inter(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textOnDark,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Cours\naujourd\'hui',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xF2FFFFFF),
-                        height: 1.3,
-                      ),
-                    ),
-                  ],
-                ),
+                label: 'Cours\naujourd\'hui',
+                onTap: () => context.go(AppRoutes.schedule),
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
               flex: 5,
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.cardWhite,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+              child: _StatCard(
+                background: ScolarColors.white,
+                textColor: ScolarColors.text,
+                value: pendingHomeworksAsync.maybeWhen(
+                  data: (c) => c.toString(),
+                  orElse: () => '—',
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '3',
-                      style: GoogleFonts.inter(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Devoirs à\nrendre',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textSecondary,
-                        height: 1.3,
-                      ),
-                    ),
-                  ],
-                ),
+                label: 'Devoirs à\nrendre',
+                hasBorder: true,
+                onTap: () => context.go(AppRoutes.homeworks),
               ),
             ),
           ],
@@ -256,246 +244,453 @@ class StudentHomePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSectionHeader(String title, String actionLabel) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.background,
+    required this.value,
+    required this.label,
+    this.textColor = ScolarColors.white,
+    this.hasBorder = false,
+    this.onTap,
+  });
+
+  final Color background;
+  final String value;
+  final String label;
+  final Color textColor;
+  final bool hasBorder;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final card = Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(16),
+        border: hasBorder
+            ? Border.all(color: const Color(0xFFE5E7EB), width: 1)
+            : null,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
+            value,
+            style: GoogleFonts.dmSerifDisplay(fontSize: 30, color: textColor),
           ),
+          const SizedBox(height: 8),
           Text(
-            actionLabel,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+            label,
+            style: GoogleFonts.dmSans(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: textColor == ScolarColors.white
+                  ? const Color(0xE6FFFFFF)
+                  : ScolarColors.muted,
+              height: 1.3,
             ),
           ),
         ],
       ),
     );
+    if (onTap == null) return card;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: card,
+      ),
+    );
   }
+}
 
-  Widget _buildUpcomingCourses() {
+// ─── Upcoming courses ────────────────────────────────────────────────────
+
+class _UpcomingCourses extends ConsumerWidget {
+  const _UpcomingCourses();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todayAsync = ref.watch(todayScheduleProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader('Prochains cours', 'Voir tout'),
+          const SizedBox(height: 24),
+          _SectionHeader(
+            title: 'Prochains cours',
+            actionLabel: 'Voir tout',
+            onAction: () => context.go(AppRoutes.schedule),
+          ),
           const SizedBox(height: 14),
-          Column(
-            children: _upcomingCourses.map((course) {
-              return Padding(
-                key: ValueKey(course['time']),
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _CourseItem(
-                  time: course['time'] as String,
-                  title: course['title'] as String,
-                  subtitle: course['subtitle'] as String,
-                  barColor: course['barColor'] as Color,
-                  isOngoing: course['isOngoing'] as bool,
-                ),
+          todayAsync.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (e, _) => Text('—', style: ScolarTypography.bodySmall),
+            data: (slots) {
+              final upcoming = _filterUpcoming(slots).take(3).toList();
+              if (upcoming.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Pas d\'autre cours aujourd\'hui.',
+                    style: ScolarTypography.bodySmall,
+                  ),
+                );
+              }
+              return Column(
+                children: upcoming
+                    .map(
+                      (c) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _CourseItem(slot: c),
+                      ),
+                    )
+                    .toList(),
               );
-            }).toList(),
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRecentGrades() {
+  List<CourseSlot> _filterUpcoming(List<CourseSlot> all) {
+    final now = DateTime.now();
+    return all.where((c) => c.end.isAfter(now)).toList()
+      ..sort((a, b) => a.start.compareTo(b.start));
+  }
+}
+
+class _CourseItem extends StatelessWidget {
+  const _CourseItem({required this.slot});
+  final CourseSlot slot;
+
+  bool get _isOngoing {
+    final now = DateTime.now();
+    return now.isAfter(slot.start) && now.isBefore(slot.end);
+  }
+
+  Color get _barColor {
+    final hash = slot.subjectName.hashCode.abs() % 3;
+    switch (hash) {
+      case 0:
+        return ScolarColors.primary;
+      case 1:
+        return ScolarColors.accent;
+      default:
+        return _kBarIndigo;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: ScolarColors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 50,
+            child: Text(
+              FrDate.hourMinute(slot.start),
+              style: GoogleFonts.dmSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: ScolarColors.text,
+              ),
+            ),
+          ),
+          Container(
+            width: 4,
+            height: 50,
+            margin: const EdgeInsets.only(right: 14),
+            decoration: BoxDecoration(
+              color: _barColor,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  slot.subjectName,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: ScolarColors.text,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${slot.teacherName} · Salle ${slot.room}',
+                  style: GoogleFonts.dmSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: ScolarColors.muted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (_isOngoing) ...[
+            const SizedBox(width: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: _kCardNavy,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'EN COURS',
+                style: GoogleFonts.dmSans(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: ScolarColors.white,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Recent subjects (carrousel) ──────────────────────────────────────────
+
+class _RecentSubjects extends ConsumerWidget {
+  const _RecentSubjects();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subjectsAsync = ref.watch(subjectsProvider);
+
     return Padding(
       padding: const EdgeInsets.only(top: 24, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader('Notes récentes', 'Voir tout'),
-          const SizedBox(height: 14),
-          SingleChildScrollView(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            child: Row(
-              children: _recentGrades.map((grade) {
-                final bool isPositive = grade['delta'].toString().startsWith(
-                  '+',
-                );
-                return Padding(
-                  key: ValueKey(grade['initials']),
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Container(
-                    width: 110,
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardWhite,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x0A000000),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: 34,
-                              width: 34,
-                              decoration: BoxDecoration(
-                                color: grade['avatarColor'] as Color,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                grade['initials'] as String,
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textOnDark,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              grade['delta'] as String,
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: isPositive
-                                    ? AppColors.positive
-                                    : AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Text(
-                          grade['subject'] as String,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+            child: _SectionHeader(
+              title: 'Notes récentes',
+              actionLabel: 'Voir tout',
+              onAction: () => context.go(AppRoutes.notes),
+            ),
+          ),
+          const SizedBox(height: 14),
+          subjectsAsync.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (e, _) => const SizedBox.shrink(),
+            data: (subjects) => SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: subjects
+                    .take(5)
+                    .map(
+                      (s) => Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: _SubjectChip(subject: s),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildBottomNav() {
-    return Container(
-      height: 70,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x14000000),
-            blurRadius: 16,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: const [
-          _NavItem(icon: Icons.home_rounded, label: 'Accueil', isActive: true),
-          _NavItem(
-            icon: Icons.note_alt_outlined,
-            label: 'Notes',
-            isActive: false,
-          ),
-          _NavItem(
-            icon: Icons.calendar_month_outlined,
-            label: 'Planning',
-            isActive: false,
-          ),
-          _NavItem(
-            icon: Icons.person_outline,
-            label: 'Profil',
-            isActive: false,
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-class _ScolarLogoWidget extends StatelessWidget {
-  const _ScolarLogoWidget();
+class _SubjectChip extends StatelessWidget {
+  const _SubjectChip({required this.subject});
+  final Subject subject;
+
+  Color _avatarColor() {
+    final hash = subject.name.hashCode.abs() % 4;
+    switch (hash) {
+      case 0:
+        return ScolarColors.primary;
+      case 1:
+        return ScolarColors.accent;
+      case 2:
+        return const Color(0xFF8B5CF6);
+      default:
+        return _kBarIndigo;
+    }
+  }
+
+  String get _initials {
+    final parts = subject.name.split(RegExp(r'[ -]'));
+    if (parts.isEmpty || parts.first.isEmpty) return '?';
+    final first = parts.first.substring(
+      0,
+      parts.first.length >= 2 ? 2 : 1,
+    );
+    return first[0].toUpperCase() + (first.length > 1 ? first[1] : '');
+  }
 
   @override
   Widget build(BuildContext context) {
+    final color = _avatarColor();
+    final isPositive = subject.average >= 10;
+    final deltaColor = isPositive ? ScolarColors.success : ScolarColors.danger;
+
     return Container(
-      height: 40,
-      width: 40,
+      width: 130,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(10),
+        color: ScolarColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 8,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-      child: CustomPaint(painter: _ScolarLogoPainter()),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 38,
+                width: 38,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  _initials,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: ScolarColors.white,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: deltaColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isPositive
+                          ? Icons.arrow_upward_rounded
+                          : Icons.arrow_downward_rounded,
+                      size: 10,
+                      color: deltaColor,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      subject.average.toStringAsFixed(1),
+                      style: GoogleFonts.dmSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: deltaColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Text(
+            subject.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.dmSans(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: ScolarColors.text,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _ScolarLogoPainter extends CustomPainter {
+// ─── Bits réutilisables ───────────────────────────────────────────────────
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.title,
+    required this.actionLabel,
+    this.onAction,
+  });
+
+  final String title;
+  final String actionLabel;
+  final VoidCallback? onAction;
+
   @override
-  void paint(Canvas canvas, Size size) {
-    const double cell = 17;
-    const double spacing = 3;
-    final paint = Paint()..color = Colors.white;
-
-    final topLeftCenter = Offset(cell / 2, cell / 2);
-    canvas.drawCircle(topLeftCenter, cell / 2, paint);
-
-    final topRightCenter = Offset(cell + spacing + cell / 2, cell / 2);
-    canvas.drawCircle(topRightCenter, cell / 2, paint);
-    canvas.drawCircle(
-      topRightCenter,
-      cell / 2 - 4,
-      Paint()..color = AppColors.primary,
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.dmSans(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: ScolarColors.text,
+          ),
+        ),
+        GestureDetector(
+          onTap: onAction,
+          child: Text(
+            actionLabel,
+            style: GoogleFonts.dmSans(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: ScolarColors.primary,
+            ),
+          ),
+        ),
+      ],
     );
-
-    final bottomLeftRect = Rect.fromLTWH(0, cell + spacing, cell, cell);
-    canvas.drawArc(bottomLeftRect, 3.14159, 3.14159, true, paint);
-
-    final bottomRightRect = Rect.fromLTWH(
-      cell + spacing,
-      cell + spacing,
-      cell,
-      cell,
-    );
-    final bottomRightRRect = RRect.fromRectAndCorners(
-      bottomRightRect,
-      bottomLeft: const Radius.circular(8),
-      bottomRight: const Radius.circular(8),
-    );
-    canvas.drawRRect(bottomRightRRect, paint);
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _NotificationBellWidget extends StatelessWidget {
@@ -509,7 +704,7 @@ class _NotificationBellWidget extends StatelessWidget {
         const Icon(
           Icons.notifications_none_rounded,
           size: 26,
-          color: AppColors.textPrimary,
+          color: ScolarColors.text,
         ),
         Positioned(
           right: -1,
@@ -518,145 +713,9 @@ class _NotificationBellWidget extends StatelessWidget {
             height: 8,
             width: 8,
             decoration: const BoxDecoration(
-              color: AppColors.notifDot,
+              color: ScolarColors.accent,
               shape: BoxShape.circle,
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CourseItem extends StatelessWidget {
-  const _CourseItem({
-    required this.time,
-    required this.title,
-    required this.subtitle,
-    required this.barColor,
-    required this.isOngoing,
-  });
-
-  final String time;
-  final String title;
-  final String subtitle;
-  final Color barColor;
-  final bool isOngoing;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x0A000000),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 42,
-            child: Text(
-              time,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-          Container(
-            width: 4,
-            height: 50,
-            margin: const EdgeInsets.only(right: 14),
-            decoration: BoxDecoration(
-              color: barColor,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (isOngoing) ...[
-            const SizedBox(width: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.badgeBg,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                'EN COURS',
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textOnDark,
-                  letterSpacing: 0.3,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool isActive;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          size: 24,
-          color: isActive ? AppColors.primary : AppColors.textSecondary,
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 11,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-            color: isActive ? AppColors.primary : AppColors.textSecondary,
           ),
         ),
       ],
