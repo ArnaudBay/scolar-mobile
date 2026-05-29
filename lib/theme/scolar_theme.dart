@@ -10,6 +10,7 @@
 // ──────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -21,6 +22,11 @@ class ScolarColors {
 
   /// Bleu électrique — boutons primaires, accents, en-têtes.
   static const Color primary = Color(0xFF0D02FE);
+
+  /// Bleu clair — version moins saturée du primary, utilisée pour le
+  /// logomark, les CTAs onboarding et les éléments "doux" qui ne doivent
+  /// pas attaquer visuellement (vs le primary plein, plus agressif).
+  static const Color primaryLight = Color(0xFF4D5BFF);
 
   /// Bleu profond — état hover / pressed des boutons.
   static const Color primaryDark = Color(0xFF0A02CC);
@@ -45,6 +51,15 @@ class ScolarColors {
 
   /// Fond de page neutre (hors écrans principaux).
   static const Color background = Color(0xFFF7F8FC);
+
+  /// Fond crème — écrans publics (login, register) façon "soft paper".
+  static const Color cream = Color(0xFFF3EEE3);
+
+  /// Surface beige plus sombre — onglet inactif sur fond crème.
+  static const Color creamDark = Color(0xFFE6DFD0);
+
+  /// Encre profonde — CTA primaires "noir" sur fond crème.
+  static const Color ink = Color(0xFF0F1115);
 
   /// Vert validation — états positifs, tendance ↑.
   static const Color success = Color(0xFF10B981);
@@ -316,9 +331,20 @@ class ScolarTheme {
       backgroundColor: ScolarColors.white,
       foregroundColor: ScolarColors.text,
       elevation: 0,
+      scrolledUnderElevation: 0,
       centerTitle: false,
       titleTextStyle: ScolarTypography.h3,
       iconTheme: const IconThemeData(color: ScolarColors.text, size: 22),
+      // Conserve la transparence des barres système quand un AppBar
+      // est posé en haut d'un écran.
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarContrastEnforced: false,
+      ),
     ),
 
     // ── Cards ──────────────────────────────────────────────────────

@@ -1,0 +1,78 @@
+{
+  "@@locale": "fr",
+
+  "appTitle": "Scolar",
+  "splashTagline": "Ta scolarité dans la poche",
+
+  "onboardingSkip": "Passer",
+  "onboardingNext": "Suivant",
+  "onboardingStart": "Commencer",
+  "onboardingGuest": "Continuer comme invité",
+
+  "authLoginTitle": "Bon retour !",
+  "authLoginSubtitle": "Connecte-toi pour accéder à tes notes et à ton emploi du temps.",
+  "authEmailLabel": "EMAIL",
+  "authPasswordLabel": "MOT DE PASSE",
+  "authSubmitLogin": "Se connecter",
+  "authSwitchToRegister": "Pas encore de compte ? S'inscrire",
+  "authRegisterTitle": "Créer un compte",
+  "authSubmitRegister": "Créer mon compte",
+  "authFullNameLabel": "NOM COMPLET",
+  "authPasswordHelp": "6 caractères minimum",
+
+  "validationEmailRequired": "Email requis",
+  "validationEmailInvalid": "Email invalide",
+  "validationPasswordRequired": "Mot de passe requis",
+  "validationPasswordTooShort": "Minimum 6 caractères",
+  "validationNameRequired": "Nom requis",
+
+  "homeGreeting": "Bonjour,",
+  "homeWeekTitle": "Ta semaine\nen un coup d'œil.",
+  "homeStatAverage": "Moyenne\ngénérale",
+  "homeStatCoursesToday": "Cours\naujourd'hui",
+  "homeStatHomeworks": "Devoirs à\nrendre",
+  "homeUpcomingCourses": "Prochains cours",
+  "homeMySubjects": "Mes matières",
+  "homeSeeAll": "Voir tout",
+  "homeNoMoreCoursesToday": "Pas d'autre cours aujourd'hui.",
+
+  "notesTitle": "Mes notes",
+  "notesOverallAverage": "Moyenne générale",
+  "notesSubjectsSection": "Matières",
+  "notesGradesSection": "Notes du trimestre",
+  "notesNoGrades": "Aucune note pour le moment.",
+  "notesAverageOver20": "/ 20 — moyenne du trimestre",
+
+  "scheduleTitle": "Emploi du temps",
+  "scheduleNoCourses": "Pas de cours.",
+  "scheduleOngoing": "EN COURS",
+
+  "homeworksTitle": "Mes devoirs",
+  "homeworksEmpty": "Aucun devoir à rendre.",
+  "homeworksDueToday": "Pour aujourd'hui",
+  "homeworksDueTomorrow": "Pour demain",
+  "homeworksMarkDone": "Marquer comme fait",
+  "homeworksMarkUndone": "Marquer comme non fait",
+
+  "profileTitle": "Mon profil",
+  "profileClassLabel": "Classe",
+  "profileSchoolLabel": "Établissement",
+  "profileEmailLabel": "Email",
+  "profileLogout": "Se déconnecter",
+  "profileLogoutConfirmTitle": "Se déconnecter ?",
+  "profileLogoutConfirmBody": "Tu devras te reconnecter pour accéder à tes notes et à ton emploi du temps.",
+  "profileLogoutCancel": "Annuler",
+  "profileNotConnected": "Non connecté",
+
+  "updateRequiredTitle": "Mise à jour requise",
+  "updateRequiredBody": "Une nouvelle version de Scolar est disponible. Mets l'application à jour pour continuer.",
+  "updateRequiredAction": "Mettre à jour",
+
+  "errorTimeout": "La connexion est lente. Vérifie ton réseau et réessaie.",
+  "errorNetwork": "Pas de connexion internet.",
+  "errorUnauthorized": "Session expirée. Reconnecte-toi.",
+  "errorForbidden": "Tu n'as pas accès à cette ressource.",
+  "errorNotFound": "Ressource introuvable.",
+  "errorServer": "Le serveur rencontre un problème. Réessaie dans quelques minutes.",
+  "errorUnknown": "Une erreur inattendue est survenue."
+}

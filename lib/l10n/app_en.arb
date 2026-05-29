@@ -1,0 +1,78 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Scolar",
+  "splashTagline": "Your school in your pocket",
+
+  "onboardingSkip": "Skip",
+  "onboardingNext": "Next",
+  "onboardingStart": "Get started",
+  "onboardingGuest": "Continue as guest",
+
+  "authLoginTitle": "Welcome back!",
+  "authLoginSubtitle": "Sign in to access your grades and schedule.",
+  "authEmailLabel": "EMAIL",
+  "authPasswordLabel": "PASSWORD",
+  "authSubmitLogin": "Sign in",
+  "authSwitchToRegister": "No account yet? Sign up",
+  "authRegisterTitle": "Create an account",
+  "authSubmitRegister": "Create my account",
+  "authFullNameLabel": "FULL NAME",
+  "authPasswordHelp": "6 characters minimum",
+
+  "validationEmailRequired": "Email required",
+  "validationEmailInvalid": "Invalid email",
+  "validationPasswordRequired": "Password required",
+  "validationPasswordTooShort": "At least 6 characters",
+  "validationNameRequired": "Name required",
+
+  "homeGreeting": "Hi,",
+  "homeWeekTitle": "Your week\nat a glance.",
+  "homeStatAverage": "Overall\naverage",
+  "homeStatCoursesToday": "Courses\ntoday",
+  "homeStatHomeworks": "Homeworks\nto do",
+  "homeUpcomingCourses": "Upcoming courses",
+  "homeMySubjects": "My subjects",
+  "homeSeeAll": "See all",
+  "homeNoMoreCoursesToday": "No more courses today.",
+
+  "notesTitle": "My grades",
+  "notesOverallAverage": "Overall average",
+  "notesSubjectsSection": "Subjects",
+  "notesGradesSection": "Grades this term",
+  "notesNoGrades": "No grades yet.",
+  "notesAverageOver20": "/ 20 — term average",
+
+  "scheduleTitle": "Schedule",
+  "scheduleNoCourses": "No courses.",
+  "scheduleOngoing": "ONGOING",
+
+  "homeworksTitle": "My homeworks",
+  "homeworksEmpty": "No homework to turn in.",
+  "homeworksDueToday": "Due today",
+  "homeworksDueTomorrow": "Due tomorrow",
+  "homeworksMarkDone": "Mark as done",
+  "homeworksMarkUndone": "Mark as undone",
+
+  "profileTitle": "My profile",
+  "profileClassLabel": "Class",
+  "profileSchoolLabel": "School",
+  "profileEmailLabel": "Email",
+  "profileLogout": "Sign out",
+  "profileLogoutConfirmTitle": "Sign out?",
+  "profileLogoutConfirmBody": "You'll need to sign in again to access your grades and schedule.",
+  "profileLogoutCancel": "Cancel",
+  "profileNotConnected": "Not signed in",
+
+  "updateRequiredTitle": "Update required",
+  "updateRequiredBody": "A new version of Scolar is available. Update the app to continue.",
+  "updateRequiredAction": "Update",
+
+  "errorTimeout": "Connection is slow. Check your network and try again.",
+  "errorNetwork": "No internet connection.",
+  "errorUnauthorized": "Session expired. Sign in again.",
+  "errorForbidden": "You don't have access to this resource.",
+  "errorNotFound": "Resource not found.",
+  "errorServer": "The server has a problem. Try again in a few minutes.",
+  "errorUnknown": "An unexpected error occurred."
+}

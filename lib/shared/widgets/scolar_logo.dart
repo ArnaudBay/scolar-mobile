@@ -7,28 +7,38 @@ import '../../theme/scolar_theme.dart';
 ///  ┌──────────┬──────────┐
 ///  │  ●       │   ◎     │  cercle plein  |  anneau (donut)
 ///  ├──────────┼──────────┤
-///  │  ∩       │   ∪     │  arche         |  écusson arrondi
+///  │  ∩       │   ∪       │  arche         |  écusson arrondi
 ///  └──────────┴──────────┘
 class ScolarLogoMark extends StatelessWidget {
-  const ScolarLogoMark({super.key, this.size = 64});
+  const ScolarLogoMark({super.key, this.size = 64, this.color});
 
   final double size;
+
+  /// Couleur de remplissage. `null` → `ScolarColors.primary` (bleu vif).
+  /// Passer `ScolarColors.primaryLight` pour un rendu plus doux.
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(painter: _LogoPainter()),
+      child: CustomPaint(
+        painter: _LogoPainter(color ?? ScolarColors.primary),
+      ),
     );
   }
 }
 
 class _LogoPainter extends CustomPainter {
+  _LogoPainter(this.color);
+
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
     final fill = Paint()
-      ..color = ScolarColors.primary
+      ..color = color
       ..style = PaintingStyle.fill;
 
     final w = size.width;
@@ -115,5 +125,6 @@ class _LogoPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _LogoPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

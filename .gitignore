@@ -49,3 +49,6 @@ app.*.map.json
 
 # Agent instructions (never push)
 AGENTS.md
+
+# Maquettes Figma (exports lourds — référence locale uniquement)
+lib/shared/widgets/figma-export/
