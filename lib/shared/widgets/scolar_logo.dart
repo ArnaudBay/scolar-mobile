@@ -45,13 +45,17 @@ class _LogoPainter extends CustomPainter {
     final gap = w * 0.10;
     final cell = (w - gap) / 2;
 
-    final tlX = 0.0; // origine X cellule haut-gauche
-    final trX = cell + gap; // origine X cellule haut-droite
-    final topY = 0.0; // origine Y rangée haute
-    final botY = cell + gap; // origine Y rangée basse
+    final tlX = 0.0;          // origine X cellule haut-gauche
+    final trX = cell + gap;   // origine X cellule haut-droite
+    final topY = 0.0;         // origine Y rangée haute
+    final botY = cell + gap;  // origine Y rangée basse
 
     // ── 1 · Cercle plein (haut-gauche) ────────────────────────────────
-    canvas.drawCircle(Offset(tlX + cell / 2, topY + cell / 2), cell / 2, fill);
+    canvas.drawCircle(
+      Offset(tlX + cell / 2, topY + cell / 2),
+      cell / 2,
+      fill,
+    );
 
     // ── 2 · Anneau / donut (haut-droite) ──────────────────────────────
     final rCenter = Offset(trX + cell / 2, topY + cell / 2);
@@ -66,15 +70,13 @@ class _LogoPainter extends CustomPainter {
 
     // ── 3 · Arche (bas-gauche) ─────────────────────────────────────────
     // Rectangle dont le sommet est un demi-cercle.
-    // aMidY = ordonnée du diamètre horizontal (mi-hauteur de l'arc).
     final aL = tlX;
     final aR = tlX + cell;
     final aB = botY + cell;
-    final aW = cell; // largeur = diamètre du demi-cercle
+    final aW = cell; 
     final aRad = aW / 2;
-    final aMidY = botY + aRad; // le demi-cercle occupe la moitié haute
+    final aMidY = botY + aRad; 
 
-    // Arc : de (aL, aMidY) à (aR, aMidY) en passant par le haut (sweep +π).
     final archPath = Path()
       ..moveTo(aL, aB)
       ..lineTo(aL, aMidY)
@@ -84,8 +86,8 @@ class _LogoPainter extends CustomPainter {
           width: aW,
           height: aW,
         ),
-        math.pi, // départ côté gauche (180°)
-        math.pi, // sweep horaire → passe par le haut (270°)
+        math.pi,   
+        math.pi,   
         false,
       )
       ..lineTo(aR, aB)
@@ -93,17 +95,14 @@ class _LogoPainter extends CustomPainter {
     canvas.drawPath(archPath, fill);
 
     // ── 4 · Écusson arrondi (bas-droite) ──────────────────────────────
-    // Rectangle à fond semi-circulaire (cuvette).
-    // Le fond courbe occupe la moitié basse, le haut est droit.
     final sL = trX;
     final sR = trX + cell;
     final sT = botY;
     final sB = botY + cell;
     final sW = cell;
     final sRad = sW / 2;
-    final sMidY = sB - sRad; // début de la courbe inférieure
+    final sMidY = sB - sRad; 
 
-    // Arc : de (sR, sMidY) à (sL, sMidY) en passant par le bas (sweep +π).
     final shieldPath = Path()
       ..moveTo(sL, sT)
       ..lineTo(sR, sT)
@@ -114,11 +113,11 @@ class _LogoPainter extends CustomPainter {
           width: sW,
           height: sW,
         ),
-        0, // départ côté droit (0°)
-        math.pi, // sweep horaire → passe par le bas (90°)
+        0,         
+        math.pi,   
         false,
       )
-      ..close(); // remonte automatiquement vers (sL, sT) via le côté gauche
+      ..close(); 
     canvas.drawPath(shieldPath, fill);
   }
 
